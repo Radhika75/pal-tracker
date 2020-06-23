@@ -26,7 +26,7 @@ public class TimeEntryController {
         TimeEntry te = timeEntryRepository.find(id);
         if (te != null )
             return new ResponseEntity<TimeEntry>(te, HttpStatus.OK);
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping
@@ -39,7 +39,7 @@ public class TimeEntryController {
         TimeEntry te = timeEntryRepository.update(timeEntryId, expected);
         if ( te != null )
             return new ResponseEntity<TimeEntry>(te, HttpStatus.OK);
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("{timeEntryId}")
