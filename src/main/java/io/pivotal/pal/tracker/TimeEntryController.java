@@ -28,33 +28,42 @@ public class TimeEntryController {
 
     @PostMapping
     public ResponseEntity<TimeEntry> create(@RequestBody TimeEntry timeEntryToCreate) {
+        actionCounter.increment();
+        timeEntrySummary.record(timeEntryRepository.list().size());
         return new ResponseEntity<TimeEntry>(timeEntryRepository.create(timeEntryToCreate), HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<TimeEntry> read(@PathVariable long id) {
         TimeEntry te = timeEntryRepository.find(id);
-        if (te != null )
+        if (te != null ) {
+            actionCounter.increment();
             return new ResponseEntity<TimeEntry>(te, HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping
     public ResponseEntity<List<TimeEntry>> list() {
+        actionCounter.increment();
         return new ResponseEntity<List<TimeEntry>>(timeEntryRepository.list(), HttpStatus.OK);
     }
 
     @PutMapping("{timeEntryId}")
     public ResponseEntity update(@PathVariable long timeEntryId, @RequestBody TimeEntry expected) {
         TimeEntry te = timeEntryRepository.update(timeEntryId, expected);
-        if ( te != null )
+        if ( te != null ) {
+            actionCounter.increment();
             return new ResponseEntity<TimeEntry>(te, HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("{timeEntryId}")
     public ResponseEntity delete(@PathVariable long timeEntryId) {
         timeEntryRepository.delete(timeEntryId);
+        actionCounter.increment();
+        timeEntrySummary.record(timeEntryRepository.list().size());
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }
